@@ -1,6 +1,6 @@
 
 import click
-from api.models import db, User
+from api.models import db, User, Person, Planet
 
 """
 In this file, you can add as many commands as you want using the @app.cli.command decorator
@@ -15,20 +15,50 @@ def setup_commands(app):
     Note: 5 is the number of users to add
     """
     @app.cli.command("insert-test-users") # name of our command
-    @click.argument("count") # argument of out command
+    #@click.argument("count") # argument of out command
     def insert_test_users(count):
+
+        user_list = ['mickeymouse123', 'minniemouse123','janedoe123']
+
         print("Creating test users")
-        for x in range(1, int(count) + 1):
+        for x in range(0, len(user_list)):
             user = User()
-            user.email = "test_user" + str(x) + "@test.com"
-            user.password = "123456"
-            user.is_active = True
+            user.username = user_list[x]
             db.session.add(user)
             db.session.commit()
-            print("User: ", user.email, " created.")
+            print("User: ", user.username, " created.")
 
         print("All test users created")
 
-    @app.cli.command("insert-test-data")
-    def insert_test_data():
-        pass
+    @app.cli.command("create_people")
+    def insert_test_people():
+        person_name_list = ['Luke Skywalker', 'Darth Vader', 'C-3PO', 'Leah Organa', 'Obiwan Kenobi']
+        person_hair_color = ['blonde', 'none', 'none', 'black', 'white']
+
+        print("Creating test people")
+        for x in range(0, len(person_name_list)):
+            person = Person()
+            person.name= person_name_list[x]
+            person.hair_color = person_hair_color[x]
+            db.session.add(person)
+            db.session.commit()
+            print("Person: ", person.name, " created.")
+
+        print("All test people created")
+   
+    
+    @app.cli.command("create_planet")
+    def insert_test_planet():
+        planet_name_list = ['Tatooni', 'Alderaan', 'Yavin', 'Hoth', 'Dagobah']
+        planet_terrain = ['dessert', 'terrestrail', 'flora', 'icy', 'swamp']
+
+        print("Creating test planets")
+        for x in range(0, len(planet_name_list)):
+            planet = Planet()
+            planet.name= planet_name_list[x]
+            planet.terrain = planet_terrain[x]
+            db.session.add(planet)
+            db.session.commit()
+            print("Planet: ", planet.name, " created.")
+
+        print("All test planets created")
