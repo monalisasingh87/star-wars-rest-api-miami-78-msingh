@@ -33,6 +33,7 @@ def get_user_favorites(user_id):
         raise APIException('Sorry. User not found', status_code=404)
     
     all_people = [each_person.serialize() for each_person in current_user.favorite_people]
+    all_planets = [each_planet.serialize() for each_planet in current_user.favorite_planet]
     
     response = {
         "message": f'User{current_user.username}\'s list of favorites people ',
@@ -86,18 +87,15 @@ def add_favorite_person(person_id):
 @api.route('/favorite/people/<int:person_id>', methods=['DELETE'])
 def remove_favorite_person(person_id):
 
-    user = request.get_json()
-    user = db.session.get(User, user["user_id"])
+    data = request.get_json()
+    user = db.session.get(User, data["user_id"])
+    person = db.session.get(Person, person_id)
    
-    favorite = User.favorite_people.query.filter_by(person_id =person_id).first()
-    db.session.delete(favorite)
-    db.session.commit(), 
+    if person in user.favorite_people: 
+        user.favorite_people.remove(person)
+        db.session.commit(), 
 
-    return jsonify(f'User {user.username}has removed {favorite.name} from their favorites.'), 200
-
-
-    
-
+    return jsonify(f'User {user.username}has removed {person.name} from their favorites.'), 200
 
 
 @api.route('/planet', methods=['GET'])
@@ -132,17 +130,27 @@ def add_favorite_planet(planet_id):
     
     user = request.get_json()
     user = db.session.get(User, user["user_id"])
-    Planet = db.session.get(Planet, planet_id)
+    planet = db.session.get(Planet, planet_id)
 
-    user.favorite_people.append(person)
+    user.favorite_planet.append(planet)
     db.session.commit()
 
-    return jsonify(f'User {user.username}has added {person.name} to their favorites.'), 200
+    return jsonify(f'User {user.username}has added {planet.name} to their favorites.'), 200
 
 
 @api.route('/favorite/planet/<int:planet_id>', methods=['DELETE'])
 def remove_favorite_planet(planet_id):
-    pass
+    
+        data = request.get_json()
+        user = db.session.get(User, data["user_id"])
+        planet = db.session.get(Planet, planet_id)
+   
+        if planet in user.favorite_planet: 
+              user.favorite_planet.remove(planet)
+              db.session.commit(), 
+
+        return jsonify(f'User {user.username}has removed {planet.name} from their favorites.'), 200
+
 
 
 

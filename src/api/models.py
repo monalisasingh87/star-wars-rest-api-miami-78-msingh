@@ -26,14 +26,14 @@ class User(db.Model):
     def __repr__(self):
         return'<User %r>' % self.username
     
-#relationship
-favorite_people: Mapped[list['Person']]= relationship(secondary= User_Person_Favorites, back_populates= 'favorited_by_user')
-favorite_planet: Mapped[list['Planet']]= relationship(secondary= User_Planet_Favorites, back_populates= 'favorited_by_user')
+    #relationship
+    favorite_people: Mapped[list['Person']]= relationship(secondary= User_Person_Favorites, back_populates= 'favorited_by_user')
+    favorite_planet: Mapped[list['Planet']]= relationship(secondary= User_Planet_Favorites, back_populates= 'favorited_by_user')
   
-def __repr__(self):
+    def __repr__(self):
       return '<User %r>' % self.username
 
-def serialize(self):
+    def serialize(self):
         return {
             "id": self.id,
             "username": self.username,
@@ -46,13 +46,13 @@ class Person(db.Model):
     name: Mapped[str] = mapped_column(String(120), nullable=False)
     hair_color: Mapped[str] = mapped_column(String(120), nullable=True)
     
-#realtionship
-favorited_by_user: Mapped[list['User']] = relationship(secondary=User_Person_Favorites, back_populates= 'favorite_people')
+    #realtionship
+    favorited_by_user: Mapped[list['User']] = relationship(secondary=User_Person_Favorites, back_populates= 'favorite_people')
 
-def __repr__(self):
+    def __repr__(self):
         return'<People %r>' % self.name
 
-def serialize(self):
+    def serialize(self):
         return {
             "id": self.id,
             "name": self.name,
@@ -65,16 +65,17 @@ class Planet(db.Model):
     terrain: Mapped[str] = mapped_column(String(120), nullable=True)
 
         
-#realtionship
-favorited_by_user: Mapped[list['User']] = relationship(secondary=User_Planet_Favorites, back_populates= 'favorite_planet')
+    #realtionship
+    favorited_by_user: Mapped[list['User']] = relationship(secondary=User_Planet_Favorites, back_populates= 'favorite_planet')
 
 
-def __repr__(self):
+    def __repr__(self):
         return'<Planet %r>' % self.name
 
-def serialize(self):
+    def serialize(self):
         return {
             "id": self.id,
             "name": self.name,
             "terrain": self.terrain,
         }
+    
